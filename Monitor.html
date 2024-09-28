@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <div id="output"></div>
+    
+    <script>
+        const output = document.getElementById('output');
+        let socket;
+
+        document.getElementById('start').onclick = () => {
+            socket = new WebSocket('wss://trafficgenerator.onrender.com/ws');
+
+            socket.onopen = () => {
+                output.innerHTML += 'WebSocket connection established<br>';
+                socket.send('start');
+            };
+
+            socket.onmessage = (event) => {
+                output.innerHTML += 'Data: ' + event.data + '<br>';
+            };
+
+            socket.onclose = () => {
+                output.innerHTML += 'WebSocket connection closed<br>';
+            };
+        };
+
+        document.getElementById('stop').onclick = () => {
+            if (socket) {
+                socket.send('stop');
+                socket.close();
+            }
+        };
+    </script>
+</body>
+</html>
